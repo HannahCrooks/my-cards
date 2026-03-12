@@ -194,7 +194,52 @@
         </div>
 
         <div class="form-section">
-            <form action="https://formspree.io/f/mqaejnbj" method="POST">
+            <form id="cardForm">
+    <input type="hidden" name="_captcha" value="false">
+    
+    <label>Write your message:</label>
+    <textarea name="Message" placeholder="What should the card say inside?" required></textarea>
+
+    <label>Your Name:</label>
+    <input type="text" name="Sender_Name" required>
+
+    <label>Your Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Delivery Address:</label>
+    <textarea name="Shipping_Address" placeholder="Full Name, Street, City, Postcode" required></textarea>
+
+    <button type="submit" id="submitBtn" class="btn">Send My Order</button>
+    <p id="formStatus" style="margin-top:15px; font-weight:bold; color:green; display:none;">Order Sent Successfully!</p>
+</form>
+
+<script>
+    const form = document.getElementById('cardForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('formStatus');
+        btn.innerText = "Sending...";
+        
+        const formData = new FormData(form);
+        formData.append('Card_Design', document.getElementById('hidden-card-name').value);
+
+        fetch("https://formsubmit.co/ajax/hcrooks@saac.qld.edu.au", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            status.style.display = "block";
+            btn.innerText = "Order Sent!";
+            form.reset();
+        })
+        .catch(error => {
+            alert("Error sending. Please try again.");
+            btn.innerText = "Send My Order";
+        });
+    });
+</script>
                 <input type="hidden" name="Card_Design" id="hidden-card-name">
                 
                 <label>Write your message:</label>
